@@ -1,8 +1,15 @@
 package com.jt.manage.pojo;
 
-import com.jt.common.po.BasePojo;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+import com.jt.common.po.BasePojo;
+@Table(name="tb_item")	//建立关联关系
 public class Item extends BasePojo{
+	@Id	//定义主键
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;	//商品id号
 	private String title;	//商品标题
 	private String sellPoint;	//商品卖点信息 因为开启了驼峰规则，(sell_point)下划线可以去掉，后面字母大写

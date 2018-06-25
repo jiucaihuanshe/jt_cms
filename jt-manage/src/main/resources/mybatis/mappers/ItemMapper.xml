@@ -28,4 +28,16 @@
 	<select id="findItemNameById" resultType="string">
 		select name from tb_item_cat where id=#{itemId}
 	</select>
+	
+	<!-- 批量修改状态
+		collection
+		规则：
+			1.如果传递的数据为list集合，则collection="list"
+			2.如果传递的数据为array	则collection="array"
+			3.如果传递的数据为map	则collection="map中的key"
+	 -->
+	<update id="updateStatus">
+		update tb_item set status=#{status} where id in
+		(<foreach collection="ids" separator="," item="id">#{id}</foreach>)
+	</update>
 </mapper>

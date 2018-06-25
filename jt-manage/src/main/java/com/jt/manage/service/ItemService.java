@@ -12,4 +12,14 @@ public interface ItemService {
 	EasyUIResult findItemByPage(int page, int rows);
 
 	String findItemNameById(Long itemId);
+
+	//新增商品信息
+	void saveItem(Item item);
+
+	//修改商品信息
+	void updateItem(Item item);
+
+	void deleteItems(Long[] ids);
+
+	void updateStatus(Long[] ids, int status);
 }
