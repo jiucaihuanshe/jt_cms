@@ -28,7 +28,6 @@
 	<select id="findItemNameById" resultType="string">
 		select name from tb_item_cat where id=#{itemId}
 	</select>
-	
 	<!-- 批量修改状态
 		collection
 		规则：
