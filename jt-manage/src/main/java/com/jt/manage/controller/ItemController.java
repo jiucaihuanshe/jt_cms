@@ -8,12 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jt.common.vo.EasyUIResult;
 import com.jt.common.vo.SysResult;
 import com.jt.manage.pojo.Item;
+import com.jt.manage.pojo.ItemDesc;
 import com.jt.manage.service.ItemService;
 
 @Controller
@@ -77,17 +79,29 @@ public class ItemController {
 	 * 		3.2调用通用mapper实现入库操作
 	 * 	4.返回JSON数据并且返回状态码
 	 */
+	/**
+	 * 说明：由于数据表的定义我们不能将desc属性直接写到Item对象中，
+	 * 所以通过String desc 进行参数的接收
+	 * 新增的思路：
+	 * 	1.添加新增参数，实现数据的传递String desc
+	 *  2.通过Controller调用Service完成多表同时操作
+	 *  	注意事项：
+	 *  		1.如果是多张表同时"更新"，切记事务控制
+	 *  		2.如果使用spring控制食物，切记方法名称不能乱写，应该和事务策略一致。
+	 * @param item
+	 * @return
+	 */
 	@RequestMapping("/save")
 	@ResponseBody
-	public SysResult saveItem(Item item){
+	public SysResult saveItem(Item item,String desc){
 		try {
-			itemService.saveItem(item);
-  //添加新增成功日志
+			itemService.saveItem(item,desc);
+			//添加新增成功日志
 			logger.info("~~~~~~~~商品新增成功"+item.getId());
 			return SysResult.oK();	//表示新增成功
 		} catch (Exception e) {
 			e.printStackTrace();
-  logger.error("!!!!!!"+e.getMessage());
+			logger.error("!!!!!!"+e.getMessage());
 			return SysResult.build(201, "新增商品失败");
 		}
 	}
@@ -103,11 +117,18 @@ public class ItemController {
 	 * 	3.2调用通用mapper实现入库操作
 	 * 4.返回JSON数据并且返回状态码
 	 */
+	/**
+	 * 通过参数desc接收商品描述信息
+	 * @param item
+	 * @param desc
+	 * @return
+	 */
 	@RequestMapping("update")
 	@ResponseBody
-	public SysResult updateItem(Item item){
+	//如果数据库正常页面没有响应检测返回数据是否为JSON
+	public SysResult updateItem(Item item,String desc){
 		try {
-			itemService.updateItem(item);
+			itemService.updateItem(item,desc);
 			//添加修改成功日志
 			logger.info("~~~~~~~~~"+item.getId());
 			return SysResult.oK();
@@ -155,7 +176,7 @@ public class ItemController {
 	@RequestMapping("/reshelf")
 	@ResponseBody
 	public SysResult updateReshelf(Long[] ids){
-		int status =1;
+		int status =1;	//上架
 		try {
 			itemService.updateStatus(ids,status);
 			logger.info("~~~~~~~~"+Arrays.toString(ids));
@@ -171,7 +192,7 @@ public class ItemController {
 	@RequestMapping("/instock")
 	@ResponseBody
 	public SysResult updateInstock(Long[] ids){
-		int status=2;
+		int status=2;	//下架
 		try {
 			itemService.updateStatus(ids, status);
 			logger.info("~~~~~~~~~~"+Arrays.toString(ids));
@@ -180,6 +201,26 @@ public class ItemController {
 			e.printStackTrace();
 			logger.error("!!!!!!!"+e.getMessage());
 			return SysResult.build(201, "商品下架失败");
+		}
+	}
+	
+	//url: http://localhost:8091/item/query/item/desc/1474391947
+	/**
+	 * 采用restFul跳转页面其中参数采用{param}进行包裹.之后采用@PathVariable注解获取数据
+	 * @param itemId
+	 * @return
+	 */
+	@RequestMapping("/query/item/desc/{itemId}")
+	@ResponseBody
+	public SysResult findItemDesc(@PathVariable("itemId") Long itemId){
+		try {
+			ItemDesc itemDesc = itemService.findItemDesc(itemId);
+			logger.info("~~~~~~~查询数据成功"+itemDesc.getItemId());
+			return SysResult.oK(itemDesc);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("!!!!!!"+e.getMessage());
+			return SysResult.build(201, "商品描述信息查询失败");
 		}
 	}
 }

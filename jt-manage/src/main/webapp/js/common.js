@@ -22,8 +22,8 @@ Date.prototype.format = function(format){
 var TT = KindEditorUtil = {		//相当于java中定义的工具类，里面提供了很多静态方法。
 	// 编辑器参数
 	kingEditorParams : {
-		filePostName  : "uploadFile",
-		uploadJson : '/pic/upload',
+		filePostName  : "uploadFile",	//文件上传的参数名称
+		uploadJson : '/pic/upload',	//文件上传的路径
 		dir : "image"
 	},
 	// 格式化时间
