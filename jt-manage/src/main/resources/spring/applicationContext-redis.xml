@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	<!-- 通过spring的方式管理jedis
+		Jedis jedis = new Jedis("192.168.56.132", 6379);
+		补充：有时由于没有导入源码，则新生成的方法中不会出现方法参数名称，而只有参数的类型
+		例如：int arg0,int arg1,arg2.		这样如果采用name的方式进行注入时可能会产生问题，所以建
+		议使用index的下标进行参数赋值。
+		
+		源码构造方法：
+		public Jedis(final String host, final int port)
+		问题：
+			通过构造注入的形式，可以通过参数的个数准确的匹配类中的方法。
+			如果参数个数相同时，切记需要通过类型区别，否则注入失败。
+			因为spring不知道到底应该调用哪个方法。
+	 -->
+	 <bean id="jedis" class="redis.clients.jedis.Jedis">
+	 	<constructor-arg index="0" value="${redis.host}" type="java.lang.String"/>
+	 	<constructor-arg index="1" value="${redis.port}" type="int"/>
+	 </bean>
+</beans>

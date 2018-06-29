@@ -28,6 +28,8 @@
 		<property name="locations">
 			<list>
 				<value>classpath:/property/jdbc.properties</value>
+				<!-- 添加redis的配置文件 -->
+				<value>classpath:/property/redis.properties</value>
 			</list>
 		</property>
 	</bean>

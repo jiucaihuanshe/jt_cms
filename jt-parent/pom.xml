@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.jt</groupId>
-  <artifactId>jt-parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
+	<groupId>com.jt</groupId>
+	<artifactId>jt-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-  <name>jt-parent</name>
-  <url>http://maven.apache.org</url>
-  <!-- 集中定义依赖版本号 -->
+	<name>jt-parent</name>
+	<url>http://maven.apache.org</url>
+	<!-- 集中定义依赖版本号 -->
 	<properties>
 		<junit.version>4.10</junit.version>
 		<spring.version>4.1.3.RELEASE</spring.version>
@@ -46,7 +46,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-	
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -63,8 +63,8 @@
 			<artifactId>spring-aspects</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
-		
+
+
 		<!-- Mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -82,7 +82,7 @@
 			<version>${mybatis.paginator.version}</version>
 		</dependency>
 
-		
+
 		<!-- MySql -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -140,7 +140,7 @@
 			<artifactId>httpmime</artifactId>
 			<version>4.3.1</version>
 		</dependency>
-		
+
 		<!-- 消息队列 -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
@@ -148,9 +148,9 @@
 			<version>3.5.1</version>
 		</dependency>
 		<dependency>
-		       <groupId>org.springframework.amqp</groupId>
-		       <artifactId>spring-rabbit</artifactId>
-		       <version>1.4.0.RELEASE</version>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit</artifactId>
+			<version>1.4.0.RELEASE</version>
 		</dependency>
 
 		<!-- JSP相关 -->
@@ -205,13 +205,13 @@
 			<version>${jedis.version}</version>
 		</dependency>
 
-		<!--添加spring-datajar包  -->
+		<!--添加spring-datajar包 -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-redis</artifactId>
 			<version>1.4.1.RELEASE</version>
 		</dependency>
-		
+
 		<!-- 字符加密、解密 -->
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -224,6 +224,13 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.1.3.Final</version>
+		</dependency>
+
+		<!--jedis -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.version}</version>
 		</dependency>
 	</dependencies>
 </project>

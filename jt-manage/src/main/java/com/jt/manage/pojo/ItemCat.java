@@ -5,6 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jt.common.po.BasePojo;
 /**
  * 实体类中属性都需要使用包装类
@@ -19,6 +20,8 @@ import com.jt.common.po.BasePojo;
  *
  */
 @Table(name="tb_item_cat")
+//忽略未知属性 在爬虫时经常使用
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ItemCat extends BasePojo{
 	@Id	//主键定义
 	@GeneratedValue(strategy=GenerationType.IDENTITY)	//主键自增
