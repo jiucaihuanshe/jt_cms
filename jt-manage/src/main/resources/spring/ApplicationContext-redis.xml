@@ -12,6 +12,8 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
 
+	<!-- 文件名称首字符大写了，spring现在不管理这个xml -->
+
 	<!-- 通过spring的方式管理jedis
 		Jedis jedis = new Jedis("192.168.56.132", 6379);
 		补充：有时由于没有导入源码，则新生成的方法中不会出现方法参数名称，而只有参数的类型

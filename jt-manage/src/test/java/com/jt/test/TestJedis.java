@@ -1,8 +1,15 @@
 package com.jt.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisShardInfo;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 /**
  * 测试redis操作
@@ -23,5 +30,39 @@ public class TestJedis {
 		//向redis中插入数据
 		jedis.set("tomcat", "tomcat猫");
 		System.out.println(jedis.get("tomcat"));
+	}
+	
+	/**
+	 * 参数说明：
+	 * 	1.poolConfig	设置redis服务的配置工具类(例如设定最大连接数,最小空间数量)
+	 * 	2.shards	表示包含redis的节点的配置项List集合
+	 * 思路：
+	 * 	现在需要同时管理3台redis节点。首先应该定义redis的池。
+	 *  在池中包含了很多redis的节点信息。如果需要操作redis则先从池中获取
+	 *  某个节点的链接/通过该链接实行数据的新增和查询。
+	 *  
+	 *  1.定义连接池时需要设定池的大小.(因为有默认值)
+	 *  2.需要管理哪些节点信息
+	 */
+	//测试分片技术
+	@Test
+	public void test02(){
+		//JedisPoolConfig
+		//定义redis的配置	PoolConfig是过期类型
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxTotal(1000);//表示最大连接数
+		poolConfig.setMinIdle(5);//表示最小空闲数据
+		//定义redis多个节点信息
+		List<JedisShardInfo> list = new ArrayList<>();
+		//为集合添加参数
+		list.add(new JedisShardInfo("192.168.56.132", 6379));
+		list.add(new JedisShardInfo("192.168.56.132", 6380));
+		list.add(new JedisShardInfo("192.168.56.132", 6381));
+		//定义redis分片连接池
+		ShardedJedisPool jedisPool = new ShardedJedisPool(poolConfig, list);
+		//获取连接操作redis
+		ShardedJedis shardedJedis = jedisPool.getResource();
+		shardedJedis.set("tom", "tomcat猫");//表示数据的赋值
+		System.out.println(shardedJedis.get("tom"));//表示从redis中获取数据
 	}
 }
