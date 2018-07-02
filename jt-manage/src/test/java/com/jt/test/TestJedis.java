@@ -1,12 +1,16 @@
 package com.jt.test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisSentinelPool;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
@@ -64,5 +68,21 @@ public class TestJedis {
 		ShardedJedis shardedJedis = jedisPool.getResource();
 		shardedJedis.set("tom", "tomcat猫");//表示数据的赋值
 		System.out.println(shardedJedis.get("tom"));//表示从redis中获取数据
+	}
+	//多台哨兵redis测试
+	@Test
+	public void test03(){
+		//2.定义哨兵set集合
+		Set<String> sets = new HashSet<>();
+		//3.向哨兵中加入哨兵节点
+		sets.add(new HostAndPort("192.168.56.132", 26379).toString());
+		sets.add(new HostAndPort("192.168.56.132", 26380).toString());
+		sets.add(new HostAndPort("192.168.56.132", 26381).toString());
+		//1.定义哨兵连接池参数，编辑哨兵名称
+		JedisSentinelPool sentinelPool = new JedisSentinelPool("mymaster", sets);
+		//4.插入数据
+		Jedis jedis = sentinelPool.getResource();
+		jedis.set("1804", "多台哨兵测试");
+		System.out.println(jedis.get("1804"));
 	}
 }
