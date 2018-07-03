@@ -10,7 +10,9 @@ import redis.clients.jedis.ShardedJedisPool;
 
 @Service
 public class RedisService {
-	@Autowired
+	//加入required=false
+	//说明：如果spring容器中有该对象则注入，如果没有该对象则不管
+	@Autowired(required=false)
 	private JedisSentinelPool jedisSentinelPool;
 	
 	public void set(String key,String value){

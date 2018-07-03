@@ -21,7 +21,6 @@ import redis.clients.jedis.ShardedJedisPool;
  *
  */
 public class TestJedis {
-	@Test
 	public  void test01() {
 		/**
 		 * 创建Jedis工具类
@@ -49,7 +48,6 @@ public class TestJedis {
 	 *  2.需要管理哪些节点信息
 	 */
 	//测试分片技术
-	@Test
 	public void test02(){
 		//JedisPoolConfig
 		//定义redis的配置	PoolConfig是过期类型
@@ -70,7 +68,6 @@ public class TestJedis {
 		System.out.println(shardedJedis.get("tom"));//表示从redis中获取数据
 	}
 	//多台哨兵redis测试
-	@Test
 	public void test03(){
 		//2.定义哨兵set集合
 		Set<String> sets = new HashSet<>();

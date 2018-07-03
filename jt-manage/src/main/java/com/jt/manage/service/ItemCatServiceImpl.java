@@ -13,6 +13,7 @@ import com.jt.manage.mapper.ItemCatMapper;
 import com.jt.manage.pojo.ItemCat;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 
 @Service
 public class ItemCatServiceImpl implements ItemCatService {
@@ -21,8 +22,13 @@ public class ItemCatServiceImpl implements ItemCatService {
 
 	@Autowired
 	private ItemCatMapper itemCatMapper;
+	//通过Spring的方式实现依赖注入
+	//@Autowired
+	//private RedisService redisService;	//redis分片--redis哨兵
+	
+	//通过集群的方式实现缓存
 	@Autowired
-	private RedisService redisService;
+	private JedisCluster jedisCluster;
 	
 	//通过单节点实现缓存操作,但是不实用
 	//@Autowired
@@ -48,7 +54,7 @@ public class ItemCatServiceImpl implements ItemCatService {
 		// 1.定义查询的key值
 		String key = "ITEM_CAT_" + parentId;
 		// 2.根据key值查询缓存数据
-		String dataJSON = redisService.get(key);
+		String dataJSON = jedisCluster.get(key);
 		// 最后定义公用的List集合
 		List<ItemCat> itemCatList = new ArrayList<>();
 		try {
@@ -62,7 +68,7 @@ public class ItemCatServiceImpl implements ItemCatService {
 				// 将返回数据转化为JSON串 [{},{},{}]
 				String jsonResult = objectMapper.writeValueAsString(itemCatList);
 				// 将数据存入缓存中
-				redisService.set(key, jsonResult);
+				jedisCluster.set(key, jsonResult);
 			} else {
 				// 表示数据不为空 需要将JSON串转化为List<ItemCat>集合对象
 				// [{},{},{}] {id:1,name:"tom"}
