@@ -137,6 +137,7 @@
 								<a class="btn-reduce" href="javascript:;" onclick="setAmount.reduce('#buy-num')">减少数量</a>
 								<a class="btn-add" href="javascript:;" onclick="setAmount.add('#buy-num')">增加数量</a>
 								<form id="cartForm" method="post">
+									<!-- 检测是否含有三个input标签 -->
 									<input class="text" id="buy-num" name="num" value="1" onkeyup="setAmount.modify('#buy-num');"/>
 									<input type="hidden" class="text"  name="itemTitle" value="${item.title }"/>
 									<input type="hidden" class="text" name="itemImage" value="${item.images[0]}"/>
