@@ -30,6 +30,7 @@
 				<value>classpath:/property/jdbc.properties</value>
 				<!-- 添加redis的配置文件 -->
 				<value>classpath:/property/redis.properties</value>
+				<value>classpath:/property/message.properties</value>
 			</list>
 		</property>
 	</bean>

@@ -1,14 +1,19 @@
 package com.jt.manage.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jt.common.service.RedisService;
+import com.jt.common.vo.ItemCatData;
+import com.jt.common.vo.ItemCatResult;
 import com.jt.manage.mapper.ItemCatMapper;
 import com.jt.manage.pojo.ItemCat;
 
@@ -29,6 +34,11 @@ public class ItemCatServiceImpl implements ItemCatService {
 	//通过集群的方式实现缓存
 	@Autowired
 	private JedisCluster jedisCluster;
+	
+	//通过spring动态注入的方式引入key
+	//属性不能添加static，否则spring不能注入
+	@Value("${ITEM_CAT_KEY}")
+	private String ITEM_CAT_KEY;
 	
 	//通过单节点实现缓存操作,但是不实用
 	//@Autowired
@@ -82,6 +92,113 @@ public class ItemCatServiceImpl implements ItemCatService {
 			e.printStackTrace();
 		}
 		return itemCatList;
+	}
+
+	/**
+	 * 1.首先查询全部商品分类信息
+	 * 2.通过Map将数据进行分类保存
+	 * 3.准备返回值数据ItemCatResult对象
+	 * 4.准备一级菜单列表集合 data
+	 * 5.dataList赋值添加一级菜单
+	 * 6.准备二级菜单 List
+	 * 7.将二级菜单追加到一级菜单中
+	 * 8.准备三级菜单List
+	 * 9.将三级菜单追加到二级菜单中
+	 */
+	@Override
+	public ItemCatResult findItemCatAll() {
+		//查询全部可用的商品分类信息
+		ItemCat itemCatTemp = new ItemCat();
+		itemCatTemp.setStatus(1);	//表示可用
+		List<ItemCat> itemCatList= itemCatMapper.select(itemCatTemp);
+		
+		//准备Map数据结构将商品信息进行分类 Long代表parentId
+		Map<Long, List<ItemCat>> map = new HashMap<>();
+		for(ItemCat itemCat : itemCatList){
+			if(map.containsKey(itemCat.getParentId())){
+				//如果存入parentId证明之前有数据，只需要做数据的追加即可。
+				map.get(itemCat.getParentId()).add(itemCat);
+			}else{
+				//表示第一次插入数据
+				List<ItemCat> tempList = new ArrayList<>();
+				tempList.add(itemCat);
+				map.put(itemCat.getParentId(), tempList);
+			}
+		}
+		//通过上述的转化已经将数据完成了清洗
+		//定义一级菜单信息
+		List<ItemCatData> itemCatDataList1= new ArrayList<>();
+		//开始查询全部的一级菜单
+		for (ItemCat itemCat1 : map.get(0L)) {
+			//定义一级菜单对象
+			ItemCatData itemCatData1 = new ItemCatData();
+			itemCatData1.setUrl("/products/"+itemCat1.getId()+".html");
+			itemCatData1.setName("<a href='"+itemCatData1.getUrl()+"'>"+itemCat1.getName()+"</a>");
+			
+			//定义二级菜单对象
+			List<ItemCatData> itemCatDataList2 = new ArrayList<>();
+			for (ItemCat itemCat2 : map.get(itemCat1.getId())) {
+				ItemCatData itemCatData2 = new ItemCatData();
+				itemCatData2.setUrl("products/"+itemCat2.getId());
+				itemCatData2.setName(itemCat2.getName());
+				
+				//定义三级菜单对象
+				List<String> itemCatDataList3 = new ArrayList<>();
+				for(ItemCat itemCat3 : map.get(itemCat2.getId())){
+					itemCatDataList3.add("/products/"+itemCat3.getId()+"|"+itemCat3.getName());
+				}
+				itemCatData2.setItems(itemCatDataList3);
+				itemCatDataList2.add(itemCatData2);
+			}
+			//新增二级菜单
+			itemCatData1.setItems(itemCatDataList2);
+			//将一级菜单信息保存到一级菜单列表中
+			itemCatDataList1.add(itemCatData1);
+			//控制菜单的个数,数量达标后跳出循环
+			if(itemCatDataList1.size()>13){
+				break;
+			}
+		}
+		ItemCatResult catResult = new ItemCatResult();
+		//保存一级商品菜单信息
+		catResult.setItemCats(itemCatDataList1);
+		return catResult;
+	}
+	
+	/**
+	 * 编程思想：
+	 * 1.当原有的业务逻辑已经很复杂时不建议进行二次开发
+	 * 2.当实现自己业务逻辑方法时不要修改别人的方法
+	 * 3.如果业务逻辑相对复杂，尽可能的将方法拆分
+	 * 需求：引入缓存技术
+	 * 说明：如果key的关键字是自己单独使用，可以直接写死。如果可以的值
+	 * 需要多人一起使用，则最好使用依赖注入的形式进行赋值。
+	 * 缓存的实现：
+	 * 1.当用户查询数据时，首先应该去缓存中获取数据。
+	 * 2.如果缓存中没有该数据，则查询数据库获取
+	 * 3.将数据转化为json存入缓存中
+	 * 4.如果缓存中含有该数据，则直接讲json转化为对象返回。
+	 * @return
+	 */
+	public ItemCatResult findItemCatAllByCache(){
+		ItemCatResult itemCatResult = null;
+		//从缓存中获取数据
+		String jsonData = jedisCluster.get(ITEM_CAT_KEY);
+		try {
+			if(StringUtils.isEmpty(jsonData)){
+				itemCatResult = findItemCatAll();
+				//将对象转换为json数据
+				String jsonItemCat = objectMapper.writeValueAsString(itemCatResult);
+				//将数据存入redis中
+				jedisCluster.set(ITEM_CAT_KEY, jsonItemCat);
+			}else{
+				//表示JSON中有数据则直接转换为对象
+				itemCatResult = objectMapper.readValue(jsonData, ItemCatResult.class);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return itemCatResult;
 	}
 }
 		/*@Override
