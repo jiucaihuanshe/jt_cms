@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jt.common.vo.EasyUIResult;
 import com.jt.manage.mapper.ItemDescMapper;
 import com.jt.manage.mapper.ItemMapper;
 import com.jt.manage.pojo.Item;
 import com.jt.manage.pojo.ItemDesc;
+
+import redis.clients.jedis.JedisCluster;
 
 @Service
 public class ItemServiceImpl implements ItemService{
@@ -18,6 +22,9 @@ public class ItemServiceImpl implements ItemService{
 	private ItemMapper itemMapper;
 	@Autowired
 	private ItemDescMapper itemDescMapper;
+	@Autowired
+	private JedisCluster jedisCluster;
+	private static ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Override
 	public List<Item> findAll(){
@@ -69,6 +76,15 @@ public class ItemServiceImpl implements ItemService{
 		itemDesc.setCreated(item.getCreated());
 		itemDesc.setUpdated(item.getCreated());
 		itemDescMapper.insert(itemDesc);
+		
+		//将商品信息加入redis缓存中。
+		try {
+			String jsonData = objectMapper.writeValueAsString(item);
+			String key = "ITEM_"+item.getId();
+			jedisCluster.set(key, jsonData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -91,6 +107,9 @@ public class ItemServiceImpl implements ItemService{
 		itemDesc.setItemDesc(desc);
 		itemDesc.setUpdated(item.getUpdated());
 		itemDescMapper.updateByPrimaryKeySelective(itemDesc);
+		
+		//修改操作时应该将缓存删除
+		jedisCluster.del("ITEM_"+item.getId());
 	}
 
 	@Override
@@ -99,6 +118,11 @@ public class ItemServiceImpl implements ItemService{
 		itemMapper.deleteByIDS(ids);
 		//删除商品描述信息
 		itemDescMapper.deleteByIDS(ids);
+		
+		//当商品删除时，删除缓存
+		for(Long id : ids){
+			jedisCluster.del("ITEM_"+id);
+		}
 	}
 
 	@Override
@@ -109,5 +133,10 @@ public class ItemServiceImpl implements ItemService{
 	@Override
 	public ItemDesc findItemDesc(Long itemId) {
 		return itemDescMapper.selectByPrimaryKey(itemId);
+	}
+
+	@Override
+	public Item findItemById(Long itemId) {
+		return itemMapper.selectByPrimaryKey(itemId);
 	}
 }

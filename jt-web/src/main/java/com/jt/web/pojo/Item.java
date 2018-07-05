@@ -1,6 +1,8 @@
 package com.jt.web.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jt.common.po.BasePojo;
+@JsonIgnoreProperties(ignoreUnknown=true)	//忽略未知字符
 public class Item extends BasePojo{
 	private Long id;	//商品id号
 	private String title;	//商品标题

@@ -28,4 +28,7 @@ public interface ItemService {
 
 	//查询商品描述信息
 	ItemDesc findItemDesc(Long itemId);
+
+	//根据商品id进行查询
+	Item findItemById(Long itemId);
 }

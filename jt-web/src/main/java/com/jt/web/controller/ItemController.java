@@ -22,7 +22,7 @@ public class ItemController {
 		 * 1.准备一个item对象 并且将item对象存入域中(request域)
 		 * 2.根据ItemId查询数据
 		 */
-		Item item = itemService.findItemById(itemId);
+		Item item = itemService.findItemByIdCache(itemId);
 		model.addAttribute("item", item);
 		//经过视图解析器跳转页面
 		return "item";

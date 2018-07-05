@@ -43,7 +43,7 @@ public class WebItemCatController {
 	//第二种方式：通过JSONP简单方式调用
 	@RequestMapping("/itemcat/all")
 	@ResponseBody
-	public Object findItemCatAll(String callback,HttpServletResponse response){
+	public Object findItemCatAll(String callback){
 		//查询商品的全部的分类信息
 		ItemCatResult itemCatResult = itemCatService.findItemCatAllByCache();
 		//用来操作JSONP对象
