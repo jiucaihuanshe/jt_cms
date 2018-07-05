@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.manage.mapper.UserMapper">
+	<!-- namespace 唯一标识映射文件 -->
+	<!-- 别名包在Spinrg中定义 -->
+	<select id="findAll" resultType="User">
+		select * from user
+	</select>
+</mapper>

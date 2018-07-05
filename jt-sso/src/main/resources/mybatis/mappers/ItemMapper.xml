@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.manage.mapper.ItemMapper">
+	<!-- namespace 唯一标识映射文件 -->
+	<!--
+		业务:
+			通常查询商品表数据时.第一页展现的最新
+			修改的数据,所以将数据按照修改时间降序排列
+		注意事项:!!!!!
+		所有的sql一定要小写(mysql数据库)
+		原因:linux中严格区分大小写
+	  -->
+	<select id="findAll" resultType="Item">
+		select * from tb_item order by updated desc
+	</select>
+	
+	<!-- 查询商品的记录总数 -->
+	<select id="findItemCount" resultType="int">
+		select count(*) from tb_item
+	</select>
+	<!-- 分页查询数据 -->
+	<select id="findItemByPage" resultType="Item">
+		select * from tb_item order by updated desc limit #{begin},#{rows}
+	</select>
+	<!-- 查询商品分类名称 -->
+	<select id="findItemNameById" resultType="string">
+		select name from tb_item_cat where id=#{itemId}
+	</select>
+	<!-- 批量修改状态
+		collection
+		规则：
+			1.如果传递的数据为list集合，则collection="list"
+			2.如果传递的数据为array	则collection="array"
+			3.如果传递的数据为map	则collection="map中的key"
+	 -->
+	<update id="updateStatus">
+		update tb_item set status=#{status} where id in
+		(<foreach collection="ids" separator="," item="id">#{id}</foreach>)
+	</update>
+</mapper>
