@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+<!-- 1.定义SqlSessionFactoryBean
+		配置步骤：
+			1)添加数据源 dataSource
+			2)加载mybatis核心配置文件 configLocation
+			3)添加映射文件 mapperLocations
+			4)配置别名包 typeAliasesPackage
+	 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- name为SqlSessionFactoryBean内的属性  ref为数据源的id -->
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:/mybatis/mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:/mybatis/mappers/*.xml"/>
+		<property name="typeAliasesPackage" value="com.jt.cart.pojo"/>
+	</bean>
+	
+	<!-- 为mapper接口生成代理对象 
+			作用：
+			1.basePackage 会根据配置的包路径去扫描所有的Mapper接口文件并且为其创建代理对象
+			(JDK代理)交给spring容器管理
+	 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 定义接口包路径 -->
+		<property name="basePackage" value="com.jt.cart.mapper"/>
+	</bean>
+</beans>

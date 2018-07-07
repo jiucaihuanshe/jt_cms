@@ -96,4 +96,5 @@ public class UserController {
 		//通过重定向的方式返回系统首页
 		return "redirect:/index.html";
 	}
+	
 }
