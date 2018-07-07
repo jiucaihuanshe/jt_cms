@@ -2,10 +2,19 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jt.manage.mapper.UserMapper">
-	<!-- namespace 唯一标识映射文件 -->
-	<!-- 别名包在Spinrg中定义 -->
-	<select id="findAll" resultType="User">
-		select * from user
-	</select>
+<mapper namespace="com.jt.sso.mapper.UserMapper">
+		<!-- 使用#号获取数据的值，一般建议使用，因为有预编译的效果
+				$符使用时，只会出现在以列名为参数的应用。
+				能用#号不用$		$符号没有预编译的效果，传啥用啥,传username就是username
+				
+				如果在列名的字段中使用#{}取值，相当于
+				select count(*) from tb_user where "username"='admin123'
+		 -->
+	 <select id="findCheckUser" resultType="int">
+	 	select count(*) from tb_user where ${cloumn}=#{param}
+	 </select>
+	 
+	 <select id="selectUserByUP" resultType="User">
+	 	select * from tb_user where username=#{username} and password=#{password}
+	 </select>
 </mapper>
