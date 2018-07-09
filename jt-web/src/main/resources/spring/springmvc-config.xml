@@ -34,4 +34,12 @@
 		<!-- 定义字符集编码 -->
 		<property name="defaultEncoding" value="UTF-8"></property>
 	</bean>
+	
+	<!-- 配置拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/cart/**"/>
+			<bean class="com.jt.web.interceptor.UserInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 </beans>
