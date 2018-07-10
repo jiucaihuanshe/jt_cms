@@ -13,8 +13,6 @@ import com.jt.order.pojo.Order;
 import com.jt.order.pojo.OrderItem;
 import com.jt.order.pojo.OrderShipping;
 
-import sun.launcher.resources.launcher;
-
 @Service
 public class OrderServiceImpl implements OrderService {
 	@Autowired
@@ -45,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setOrderId(orderId);
 		order.setCreated(new Date());
 		order.setUpdated(order.getCreated());
+		order.setStatus(1);//默认为未支付状态
 		orderMapper.insert(order);
 		
 		//为OrderItem补全数据

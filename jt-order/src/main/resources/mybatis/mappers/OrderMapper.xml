@@ -4,5 +4,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 保留一个空的映射文件，满足mybatis的要求 -->
 <mapper namespace="com.jt.order.mapper.OrderMapper">
-		
+		<!-- 万能的转义表达式	可以转义任意字符
+			<![CDATA[update tb_order set status=6 where created < time and status =1]]>
+			
+			update tb_order set status=6 where created &lt; time and status =1
+		 -->
+		<update id="updateStatusByDate">
+			<![CDATA[update tb_order set status=6 where created < #{time} and status =1]]>
+		</update>
 </mapper>
