@@ -13,7 +13,7 @@
 	<!-- 1.开启springmvc注解 -->
 	<mvc:annotation-driven/>
 	<!-- 2.开启包扫描 controller -->
-	<context:component-scan base-package="com.jt.web.controller"/>
+	<context:component-scan base-package="com.jt.order.controller"/>
 
 	<!-- 3.配置视图解析器 内部资源视图解析器 -->
 	<bean id="internalResource" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -34,14 +34,4 @@
 		<!-- 定义字符集编码 -->
 		<property name="defaultEncoding" value="UTF-8"></property>
 	</bean>
-	
-	<!-- 配置拦截器 -->
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/cart/**"/>
-			<!-- 订单的拦截器 -->
-			<mvc:mapping path="/order/**"/>
-			<bean class="com.jt.web.interceptor.UserInterceptor" />
-		</mvc:interceptor>
-	</mvc:interceptors>
 </beans>
