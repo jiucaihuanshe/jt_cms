@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+    <dubbo:application name="jt-web"/>
+
+    <dubbo:registry address="zookeeper://192.168.56.133:2181"/>
+ 	
+ 	<!--
+ 		check=false 表示启动时不检查是否有提供者, 只有调用时才检查
+ 		id 应该和提供者给定的接口id一致
+ 		interface 表示生产者的路径
+ 	  -->
+    <dubbo:reference check="false" id="cartService" interface="com.jt.dubbo.service.CartService" timeout="10000"/>
+    <dubbo:reference check="false" id="orderService" interface="com.jt.dubbo.service.OrderService" timeout="10000"/>
+
+</beans>
