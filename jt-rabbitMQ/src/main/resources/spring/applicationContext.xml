@@ -108,7 +108,7 @@
 	 		拦截返回值任意的,包名为com.jt.manage.service包下的全部类的任意方法任意参数列表
 	  -->
 	 <aop:config>
-	 	<aop:pointcut expression="execution(* com.jt.order.service..*.*(..))" id="pc"/>
+	 	<aop:pointcut expression="execution(* com.jt.rabbit.service..*.*(..))" id="pc"/>
 <!-- 通知+切入点=切面 -->
 	 	<aop:advisor advice-ref="txAdvice" pointcut-ref="pc"/>
 	 </aop:config>

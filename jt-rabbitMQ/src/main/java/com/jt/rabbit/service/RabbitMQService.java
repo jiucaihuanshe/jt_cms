@@ -1,49 +1,32 @@
-package com.jt.order.service;
+package com.jt.rabbit.service;
 
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.jt.dubbo.pojo.Order;
 import com.jt.dubbo.pojo.OrderItem;
 import com.jt.dubbo.pojo.OrderShipping;
-import com.jt.dubbo.service.OrderService;
-import com.jt.order.mapper.OrderItemMapper;
-import com.jt.order.mapper.OrderMapper;
-import com.jt.order.mapper.OrderShippingMapper;
+import com.jt.rabbit.mapper.OrderItemMapper;
+import com.jt.rabbit.mapper.OrderMapper;
+import com.jt.rabbit.mapper.OrderShippingMapper;
 
-@Service
-public class OrderServiceImpl implements OrderService {
+public class RabbitMQService {
 	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
 	private OrderItemMapper orderItemMapper;
 	@Autowired
 	private OrderShippingMapper orderShippingMapper;
-	@Autowired
-	private RabbitTemplate rabbitTemplate;
 	/**
 	 * 消息队列的实现
 	 * 1.返回值类型String 返回orderId
 	 */
-	@Override
-	public String saveOrder(Order order) {
+	public void saveOrder(Order order) {
 		//获取orderId
-		String orderId = order.getUserId()+System.currentTimeMillis()+"";
-		
-		//为rabbitMQ封装数据
-		order.setOrderId(orderId);
-		//将order信息发往消息队列rabbitMQ中 定义路由Key
-		rabbitTemplate.convertAndSend("save.Order", order);
-		
-		
-		
-		
-		/*//封装order对象
-		order.setOrderId(orderId);
+		String orderId = order.getOrderId();
+		//封装order对象
 		order.setStatus(1);	//状态为1表示 未支付
 		order.setCreated(new Date());
 		order.setUpdated(order.getCreated());
@@ -61,15 +44,8 @@ public class OrderServiceImpl implements OrderService {
 		orderShipping.setOrderId(orderId);
 		orderShipping.setCreated(order.getCreated());
 		orderShipping.setUpdated(order.getCreated());
-		orderShippingMapper.insert(orderShipping);*/
+		orderShippingMapper.insert(orderShipping);
 		
-		//返回orderId 用于查询操作
-		return orderId;
-	}
-
-	//通过sql实现多表查询
-	@Override
-	public Order findOrderById(String orderId) {
-		return orderMapper.findOrderById(orderId);
+		System.out.println("消息队列执行成功！");
 	}
 }
