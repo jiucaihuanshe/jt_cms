@@ -370,5 +370,42 @@
 			<artifactId>fst</artifactId>
 			<version>1.55</version>
 		</dependency>
+		
+		<!-- 全文检索lucene -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>4.10.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>4.10.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>4.10.2</version>
+		</dependency>
+		
+		<!-- IK分词器 -->
+		<dependency>
+			<groupId>org.wltea.analyzer</groupId>
+			<artifactId>ik-analyzer</artifactId>
+			<version>2012FF_u1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>5.2.1</version>
+		</dependency>
+
+		<!-- 爬虫jsoup -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.9.1</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -14,7 +14,7 @@
  		id 应该和提供者给定的接口id一致
  		interface 表示生产者的路径
  	  -->
-    <dubbo:reference check="false" id="cartService" interface="com.jt.dubbo.service.CartService" timeout="10000"/>
-    <dubbo:reference check="false" id="orderService" interface="com.jt.dubbo.service.OrderService" timeout="10000"/>
+    <dubbo:reference check="false" id="cartService" interface="com.jt.dubbo.service.CartService" timeout="20000"/>
+    <dubbo:reference check="false" id="orderService" interface="com.jt.dubbo.service.OrderService" timeout="20000"/>
 
 </beans>
