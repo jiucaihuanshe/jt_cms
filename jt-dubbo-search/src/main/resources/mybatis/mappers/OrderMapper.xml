@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 保留一个空的映射文件，满足mybatis的要求 -->
+<mapper namespace="com.jt.order.mapper.OrderMapper">
+		<!-- 万能的转义表达式	可以转义任意字符
+			<![CDATA[update tb_order set status=6 where created < time and status =1]]>
+			
+			update tb_order set status=6 where created &lt; time and status =1
+		 -->
+		<update id="updateStatusByDate">
+			<![CDATA[update tb_order set status=6 where created < #{time} and status =1]]>
+		</update>
+		
+		<!-- 通过orderId实现数据关联查询 -->
+		<select id="findOrderById" resultMap="orderRM">
+			<!-- 查询order表数据 -->
+			select * from tb_order where order_id=#{orderId}
+		</select>
+		<!-- 属性分析
+					type:返回的数据类型
+					id:唯一标识resultMap 方便被别人调用
+					autoMapping:能够将数据表中的全部字段映射到全部属性中
+					能够实现自动的映射user_id 	=	userId
+					该属性添加肯定不错
+		 -->
+		<resultMap type="Order" id="orderRM" autoMapping="true">
+			<!-- 进行关联封装时 必须先封装主键 -->
+			<id column="order_id" property="orderId"/>
+			<!-- 由于需要关联映射 需要为orderShipping赋值
+					一对一封装orderShipping
+					property：表示一对一封装 表示一个对象 对象就是order对象中的属性orderShipping
+					为对象进行赋值。
+					javaType :表示封装对象的数据类型 与一对一映射标签association是固定搭配
+					column:表示order对象的主键信息，用来实现关联查询的
+			 -->
+			<association property="orderShipping" javaType="OrderShipping" column="order_id" select="findOrderShipping" />
+			
+			<!-- 封装orderItemList集合
+					集合封装时采用collection 数据类型ofType	是固定搭配
+			 -->
+			<collection property="orderItems" ofType="OrderItem" column="order_id" select="findOrderItems"></collection>
+		</resultMap>
+		<!-- 根据orderId实现查询OrderShipping -->
+		<select id="findOrderShipping" resultType="OrderShipping">
+			select * from tb_order_shipping where order_id=#{orderId}
+		</select>
+		<!-- 根据orderId查询orderItem -->
+		<select id="findOrderItems" resultType="OrderItem">
+			select * from tb_order_item where order_id = #{orderId}
+		</select>
+		
+		<!-- <select id="findOrderShipping" resultMap="orderShippingRM">
+			select * from tb_order_shipping where order_id=#{orderId}
+		</select>
+		采用resultMap的方式可以封装单表数据
+		<resultMap type="OrderShipping" id="orderShippingRM" autoMapping="true">
+			<id column="order_id" property="orderId"/>
+			由于添加了autoMapping=true 剩余的属性会自动的映射
+		</resultMap> -->
+</mapper>

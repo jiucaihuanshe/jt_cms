@@ -16,5 +16,7 @@
  	  -->
     <dubbo:reference check="false" id="cartService" interface="com.jt.dubbo.service.CartService" timeout="20000"/>
     <dubbo:reference check="false" id="orderService" interface="com.jt.dubbo.service.OrderService" timeout="20000"/>
+   <!-- 添加检索的Service -->
+    <dubbo:reference check="false" id="searchService" interface="com.jt.dubbo.service.SearchService" timeout="20000"/>
 
 </beans>
