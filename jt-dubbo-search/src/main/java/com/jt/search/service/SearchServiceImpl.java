@@ -1,6 +1,5 @@
 package com.jt.search.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrQuery;
@@ -8,11 +7,10 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.jt.dubbo.pojo.Item;
 import com.jt.dubbo.service.SearchService;
-@Service
+//这里可以不加Server注解（具体看视频day02阿里数据库工具 ...补充2）
 public class SearchServiceImpl implements SearchService {
 
 	//需要通过Solr实现数据的查询,需要引入配置文件

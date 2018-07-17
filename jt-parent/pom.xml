@@ -18,7 +18,7 @@
 		<mybatis.paginator.version>1.2.15</mybatis.paginator.version>
 		<mysql.version>5.1.32</mysql.version>
 		<bonecp-spring.version>0.8.0.RELEASE</bonecp-spring.version>
-		<druid.version>1.0.9</druid.version>
+		<druid.version>1.0.29</druid.version>
 
 		<mapper.version>2.3.2</mapper.version>
 		<pagehelper.version>3.4.2</pagehelper.version>
@@ -82,6 +82,12 @@
 			<version>${mybatis.paginator.version}</version>
 		</dependency>
 
+		<!-- 引入druid jar包 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
 
 		<!-- MySql -->
 		<dependency>
