@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<!-- 导入配置文件 -->
+	<properties resource="generatorConfig.properties"/>
+	<!-- 通过generator工具会自动连接数据库，并且通过反射自动的创建pojo mapper映射文件
+			所以需要添加数据库驱动文件。路径中不要添加中文
+	 -->
+	<classPathEntry location="C:\tedu\mysql-connector-java-5.1.10-bin.jar" />
+	
+	<context id="tarena">
+		
+		<commentGenerator>
+			<property name="suppressAllComments" value="${suppressAllComments}"/>
+		</commentGenerator>
+		<jdbcConnection driverClass="${driverClass}" connectionURL="${url}" userId="${username}" password="${password}" />
+	
+		<javaModelGenerator targetPackage="${modeltargetPackage}" targetProject="${targetProject}" />
+		
+		<sqlMapGenerator targetPackage="${sqltargetPackage}" targetProject="${targetProject}" />	
+		<javaClientGenerator targetPackage="${clienttargetPackage}" targetProject="${targetProject}" type="XMLMAPPER" /> 
+
+		
+		<table schema="" tableName="book" />
+		<table schema="" tableName="section" />
+		<!-- 如果需要为表自动生成代码 只需要在tableName中添加表的名称
+				如果是多张表，则添加多个标签
+		 -->
+		<!--如果有多张表写多个table标签-->
+		<!--
+			<table schema="" tableName="order_c" />
+			<table schema="" tableName="order_c" />
+		-->
+		
+	</context>
+</generatorConfiguration>
