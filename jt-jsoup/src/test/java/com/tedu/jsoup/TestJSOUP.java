@@ -23,15 +23,21 @@ public class TestJSOUP {
 	 */
 	@Test
 	public void test01(){
-		String url = "http://www.tmooc.cn/";
+		String url = "http://club.xywy.com/list_346_answer.htm";
 		//通过JSOUP进行数据爬取
 		try {
 			Document document = Jsoup.connect(url).get();
 			//通过jsoup提供的选择器快速定位目标元素
-			Element element = document.select(".ad-area h3").get(0);
-			//获取h3的具体文本内容
-			String msg = element.text();
-			System.out.println("爬取的数据："+msg);
+			for(int i=1;i<=40;i++){
+				Element element = document.select(".kstable a").get(i);
+				String aLink = element.select("a").first().attr("abs:href");
+				//获取h3的具体文本内容
+				String msg = element.text();
+				System.out.println(msg);
+				System.out.println(aLink);
+				i++;
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
